@@ -5,9 +5,10 @@
 #include "stdint.h"
 #include "timer.h"
 #include "ansi.h"
+#include "string.h"
 
 int main(void) {
-	volatile temp;
+	/*volatile temp;
 
 	int32_t second = 0;
 	int32_t minute = 0;
@@ -72,5 +73,77 @@ int main(void) {
 
 		temp = centisecond;
 		tempJoy = readJoystick();
-	}
+
+	uart_init(576000);
+
+	clrscr();
+	gotoxy(0,0);
+	//printf("\n%d", stringCheck());
+	printf("\n%d", stringCheck(read_uart_data(6)));
+	*/
+	volatile temp;
+
+	int32_t second = 0;
+	int32_t minute = 0;
+	int32_t hour = 0;
+	int32_t stop = 0;
+	int32_t tempJoy = 0x00;
+	int32_t split1centi = 0;
+	int32_t split1sec = 0;
+	int32_t split1min = 0;
+	int32_t split1hour = 0;
+
+	uart_init(576000);
+	clrscr();
+	initPins();
+
+	configureTimer();
+	window(10, 5, 42, 10);
+	gotoxy(12, 7);
+	printf("Time since start:");
+	gotoxy(12, 8);
+	printf("Split time 1:");
+	gotoxy(12, 9);
+	printf("Split time 2:");
+	gotoxy(31,8);
+	printf("%d:%d:%d.%d", split1hour, split1min, split1sec, split1centi);
+	gotoxy(31,9);
+	printf("0:0:0.0");
+		while(1) {
+			if( (centisecond > 99) ) {
+				second++;
+				centisecond = 0;
+			}
+			if(second > 59){
+				minute++;
+				second = 0;
+			}
+			if(minute > 59){
+				hour++;
+				minute = 0;
+			}
+			if (centisecond != temp) {
+				gotoxy(31, 7);
+				printf("%d:%d:%d.%d", hour, minute, second, centisecond);
+			}
+			if (stringCheck(read_uart_data(6)) == 3) {
+				int32_t split1centi = centisecond;
+				int32_t split1sec = second;
+				int32_t split1min = minute;
+				int32_t split1hour = hour;
+				gotoxy(31,8);
+				printf("%d:%d:%d.%d", split1hour, split1min, split1sec, split1centi);
+			}
+			if (stringCheck(read_uart_data(6)) == 4 ) {
+				gotoxy(31,9);
+				printf("%d:%d:%d.%d", hour, minute, second, centisecond);
+			}
+			if (stringCheck(read_uart_data(6)) == 1 || stringCheck(read_uart_data(6)) == 2){
+				TIM15 -> DIER ^= 0x0001;
+			}
+
+
+			temp = centisecond;
+			tempJoy = readJoystick();
+		}
 }

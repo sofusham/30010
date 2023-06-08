@@ -4,6 +4,7 @@
 #include "stdint.h"
 #include "timer.h"
 #include "ansi.h"
+#include "string.h"
 
 volatile centisecond = 0;
 void TIM1_BRK_TIM15_IRQHandler(void) {
@@ -47,5 +48,39 @@ void window(int x2, int y2, int x1, int y1) {
 		printf("\xBA");
 	}
 }
+
+uint8_t* read_uart_data(uint8_t num_chars) {
+	static uint8_t data[100];
+	for (uint8_t i = 0; i < num_chars; i++) {
+		while(1) {
+			uint8_t input = uart_get_char();
+			if (input != 0) {
+				if(input != 0x0D){
+				data[i] = input;
+				printf("%c", data[i]);
+				break;
+				} else {
+					data[i] = 0;
+					i = num_chars;
+					break;
+				}
+			}
+		}
+	}
+	data[num_chars] = 0x00;
+	return data;
+}
+
+uint8_t stringCheck(char * data) {
+
+	if( !(strcmp(data, "start"))) {return 1;}
+	else if ( !(strcmp(data, "stop"))) {return 2;}
+	else if ( !(strcmp(data, "split1"))) {return 3;}
+	else if ( !(strcmp(data, "split2"))) {return 4;}
+	else if ( !(strcmp(data, "reset"))) {return 5;}
+	else if ( !(strcmp(data, "help"))) {return 6;}
+	else {return 0;}
+}
+
 
 
