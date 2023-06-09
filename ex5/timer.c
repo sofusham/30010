@@ -50,15 +50,14 @@ void window(int x2, int y2, int x1, int y1) {
 }
 
 uint8_t* read_uart_data(uint8_t num_chars) {
-	static uint8_t data[100];
+	static uint8_t data[10];
 	for (uint8_t i = 0; i < num_chars; i++) {
 		while(1) {
 			uint8_t input = uart_get_char();
 			if (input != 0) {
 				if(input != 0x0D){
-				data[i] = input;
-				printf("%c", data[i]);
-				break;
+					data[i] = input;
+					break;
 				} else {
 					data[i] = 0;
 					i = num_chars;
@@ -72,13 +71,12 @@ uint8_t* read_uart_data(uint8_t num_chars) {
 }
 
 uint8_t stringCheck(char * data) {
-
-	if( !(strcmp(data, "start"))) {return 1;}
-	else if ( !(strcmp(data, "stop"))) {return 2;}
-	else if ( !(strcmp(data, "split1"))) {return 3;}
-	else if ( !(strcmp(data, "split2"))) {return 4;}
-	else if ( !(strcmp(data, "reset"))) {return 5;}
-	else if ( !(strcmp(data, "help"))) {return 6;}
+	if( !(strcmp(data, "s"))) {return 1;}
+	else if ( !(strcmp(data, "a"))) {return 2;}
+	else if ( !(strcmp(data, "1"))) {return 3;}
+	else if ( !(strcmp(data, "2"))) {return 4;}
+	else if ( !(strcmp(data, "r"))) {return 5;}
+	else if ( !(strcmp(data, "h"))) {return 6;}
 	else {return 0;}
 }
 
