@@ -1,5 +1,5 @@
 /*
- * ball.c
+ * spaceship.c
  *
  *  Created on: 12. jun. 2023
  *      Author: sofus
@@ -8,80 +8,121 @@
 #include "30010_io.h" 		// Input/output library for this course
 #include "ball.h"
 #include "ansi.h"
+#include "timer.h"
 
-void update_spaceship(ball_t * ball_p, int dir) {
-	int32_t tempX = (*ball_p).x;
-	int32_t tempY = (*ball_p).y;
-	int8_t tempR = (*ball_p).rotation;
+void do_the_thing(spaceship_t * spaceship_p, int *dir) {
+	if (uart_get_count() == 1) {
+		dir = string_check(read_uart_data(1));
+		centisecond = 0;
+	}
+	update_spaceship(&(*spaceship_p), dir);
+	if (centisecond > 20) {
+		wind_resistance(&(*spaceship_p));
+		centisecond = 0;
+	}
+
+	//lav en konstant movement der er høj så længe der er forskel på temp_velocity og celocity. Når movement er lav så kører wind_resistance
+	//Sæt timeren til 0 ved input fra tastaturet idiot
+
+	gotoxy(14080, 1024);
+	printf("velocity: x = %d, y = %d ", (*spaceship_p).velX, (*spaceship_p).velY);
+	dir = 0;
+}
+void update_spaceship(spaceship_t * spaceship_p, int dir) {
+	int32_t tempX = (*spaceship_p).x;
+	int32_t tempY = (*spaceship_p).y;
+	int8_t tempR = (*spaceship_p).rotation;
 
 	switch(dir) {
 	case 1:
-		update_velocity(&(*ball_p));
+		update_velocity(&(*spaceship_p));
 		break;
 	case 2:
-		(*ball_p).rotation--;
-		if ((*ball_p).rotation < 0) {(*ball_p).rotation = 7;}
+		(*spaceship_p).rotation--;
+		if ((*spaceship_p).rotation < 0) {(*spaceship_p).rotation = 7;}
 		break;
 	case 4:
-		(*ball_p).rotation++;
-		if ((*ball_p).rotation > 7) {(*ball_p).rotation = 0;}
+		(*spaceship_p).rotation++;
+		if ((*spaceship_p).rotation > 7) {(*spaceship_p).rotation = 0;}
 		break;
 	}
-	(*ball_p).x += (*ball_p).velX;
-	(*ball_p).y += (*ball_p).velY;
-	if (tempX != (*ball_p).x || tempY != (*ball_p).y || tempR != (*ball_p).rotation) {draw_new_spaceship(&(*ball_p), tempX, tempY, tempR);}
+	(*spaceship_p).x += (*spaceship_p).velX;
+	(*spaceship_p).y += (*spaceship_p).velY;
+
+	wrapping(&(*spaceship_p));
+
+	if (tempX != (*spaceship_p).x || tempY != (*spaceship_p).y || tempR != (*spaceship_p).rotation) {draw_new_spaceship(&(*spaceship_p), tempX, tempY, tempR);}
 }
 
-void wind_resistance(ball_t * ball_p) {
-	/*if ((*ball_p).velX <= -2) {(*ball_p).velX += 2;}
-	else if ((*ball_p).velX >= 2) {(*ball_p).velX -= 2;}
-	else if ((*ball_p).velX < 2 && (*ball_p).velX > -2) {(*ball_p).velX = 0;}
-
-	if ((*ball_p).velY <= -2) {(*ball_p).velY += 2;}
-	else if ((*ball_p).velY >= 2) {(*ball_p).velY -= 2;}
-	else if ((*ball_p).velY < 2 && (*ball_p).velY > -2) {(*ball_p).velY = 0;}*/
-
-	if ((*ball_p).velX >= 1) {(*ball_p).velX -= 1;}
-	else if ((*ball_p).velX <= - 1) {(*ball_p).velX += 1;}
-
-	if ((*ball_p).velY >= 1) {(*ball_p).velY -= 1;}
-	else if ((*ball_p).velY <= - 1) {(*ball_p).velY += 1;}
+void wrapping(spaceship_t * spaceship_p) {
+	if ((*spaceship_p).x > 128 * 190) {
+		(*spaceship_p).x = 0;
+		clrscr();
+	}
+	else if ((*spaceship_p).x < 0) {
+		(*spaceship_p).x = 128 * 190;
+		clrscr();
+	}
+	if ((*spaceship_p).y > 128 * 55) {
+		(*spaceship_p).y = 0;
+		clrscr();
+	}
+	else if ((*spaceship_p).y < 0) {
+		(*spaceship_p).y = 128* 55;
+		clrscr();
+	}
 }
 
-void update_velocity(ball_t * ball_p) {
-	switch((*ball_p).rotation) {
+void wind_resistance(spaceship_t * spaceship_p) {
+	/*if ((*spaceship_p).velX <= -2) {(*spaceship_p).velX += 2;}
+	else if ((*spaceship_p).velX >= 2) {(*spaceship_p).velX -= 2;}
+	else if ((*spaceship_p).velX < 2 && (*spaceship_p).velX > -2) {(*spaceship_p).velX = 0;}
+
+	if ((*spaceship_p).velY <= -2) {(*spaceship_p).velY += 2;}
+	else if ((*spaceship_p).velY >= 2) {(*spaceship_p).velY -= 2;}
+	else if ((*spaceship_p).velY < 2 && (*spaceship_p).velY > -2) {(*spaceship_p).velY = 0;}*/
+
+	if ((*spaceship_p).velX >= 1) {(*spaceship_p).velX -= 1;}
+	else if ((*spaceship_p).velX <= - 1) {(*spaceship_p).velX += 1;}
+
+	if ((*spaceship_p).velY >= 1) {(*spaceship_p).velY -= 1;}
+	else if ((*spaceship_p).velY <= - 1) {(*spaceship_p).velY += 1;}
+}
+
+void update_velocity(spaceship_t * spaceship_p) {
+	switch((*spaceship_p).rotation) {
 	case 0:
-		(*ball_p).velY -= 4;
+		(*spaceship_p).velY -= 4;
 		break;
 	case 1:
-		(*ball_p).velX += 4;
-		(*ball_p).velY -= 4;
+		(*spaceship_p).velX += 4;
+		(*spaceship_p).velY -= 4;
 		break;
 	case 2:
-		(*ball_p).velX += 4;
+		(*spaceship_p).velX += 4;
 		break;
 	case 3:
-		(*ball_p).velX += 4;
-		(*ball_p).velY += 4;
+		(*spaceship_p).velX += 4;
+		(*spaceship_p).velY += 4;
 		break;
 	case 4:
-		(*ball_p).velY += 4;
+		(*spaceship_p).velY += 4;
 		break;
 	case 5:
-		(*ball_p).velX -= 4;
-		(*ball_p).velY += 4;
+		(*spaceship_p).velX -= 4;
+		(*spaceship_p).velY += 4;
 		break;
 	case 6:
-		(*ball_p).velX -= 4;
+		(*spaceship_p).velX -= 4;
 		break;
 	case 7:
-		(*ball_p).velX -= 4;
-		(*ball_p).velY -= 4;
+		(*spaceship_p).velX -= 4;
+		(*spaceship_p).velY -= 4;
 		break;
 	}
 }
 
-void draw_new_spaceship(ball_t * ball_p, int32_t tempX, int32_t tempY, int8_t tempR) {
+void draw_new_spaceship(spaceship_t * spaceship_p, int32_t tempX, int32_t tempY, int8_t tempR) {
 	// clearing the old spaceship
 	switch (tempR) {
 	case 0:
@@ -151,69 +192,69 @@ void draw_new_spaceship(ball_t * ball_p, int32_t tempX, int32_t tempY, int8_t te
 	}
 
 	//printing new spaceship
-	switch((*ball_p).rotation) {
+	switch((*spaceship_p).rotation) {
 	case 0:
-		gotoxy((*ball_p).x - (1 << 7), (*ball_p).y + (1 << 7));
+		gotoxy((*spaceship_p).x - (1 << 7), (*spaceship_p).y + (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x + (1 << 7), (*ball_p).y + (1 << 7));
+		gotoxy((*spaceship_p).x + (1 << 7), (*spaceship_p).y + (1 << 7));
 		printf("\xDB");
 		break;
 	case 1:
-		gotoxy((*ball_p).x - (1 << 7), (*ball_p).y);
+		gotoxy((*spaceship_p).x - (1 << 7), (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y + (1 << 7));
+		gotoxy((*spaceship_p).x, (*spaceship_p).y + (1 << 7));
 		printf("\xDB");
 		break;
 	case 2:
-		gotoxy((*ball_p).x - (1 << 7), (*ball_p).y - (1 << 7));
+		gotoxy((*spaceship_p).x - (1 << 7), (*spaceship_p).y - (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x - (1 << 7), (*ball_p).y + (1 << 7));
+		gotoxy((*spaceship_p).x - (1 << 7), (*spaceship_p).y + (1 << 7));
 		printf("\xDB");
 		break;
 	case 3:
-		gotoxy((*ball_p).x, (*ball_p).y - (1 << 7));
+		gotoxy((*spaceship_p).x, (*spaceship_p).y - (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x - (1 << 7), (*ball_p).y);
+		gotoxy((*spaceship_p).x - (1 << 7), (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
 		break;
 	case 4:
-		gotoxy((*ball_p).x - (1 << 7), (*ball_p).y - (1 << 7));
+		gotoxy((*spaceship_p).x - (1 << 7), (*spaceship_p).y - (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x + (1 << 7), (*ball_p).y - (1 << 7));
+		gotoxy((*spaceship_p).x + (1 << 7), (*spaceship_p).y - (1 << 7));
 		printf("\xDB");
 		break;
 	case 5:
-		gotoxy((*ball_p).x, (*ball_p).y - (1 << 7));
+		gotoxy((*spaceship_p).x, (*spaceship_p).y - (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x + (1 << 7), (*ball_p).y);
+		gotoxy((*spaceship_p).x + (1 << 7), (*spaceship_p).y);
 		printf("\xDB");
 		break;
 	case 6:
-		gotoxy((*ball_p).x + (1 << 7), (*ball_p).y - (1 << 7));
+		gotoxy((*spaceship_p).x + (1 << 7), (*spaceship_p).y - (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x + (1 << 7), (*ball_p).y + (1 << 7));
+		gotoxy((*spaceship_p).x + (1 << 7), (*spaceship_p).y + (1 << 7));
 		printf("\xDB");
 		break;
 	case 7:
-		gotoxy((*ball_p).x, (*ball_p).y + (1 << 7));
+		gotoxy((*spaceship_p).x, (*spaceship_p).y + (1 << 7));
 		printf("\xDB");
-		gotoxy((*ball_p).x, (*ball_p).y);
+		gotoxy((*spaceship_p).x, (*spaceship_p).y);
 		printf("\xDB");
-		gotoxy((*ball_p).x + (1 << 7), (*ball_p).y);
+		gotoxy((*spaceship_p).x + (1 << 7), (*spaceship_p).y);
 		printf("\xDB");
 		break;
 	}
