@@ -6,9 +6,10 @@
  */
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 		// Input/output library for this course
-#include "ball.h"
+#include "spaceship.h"
 #include "ansi.h"
 #include "timer.h"
+#include "analogJoystick.h"
 
 void do_the_thing(spaceship_t * spaceship_p, int *dir) {
 	if (uart_get_count() == 1) {
@@ -20,12 +21,12 @@ void do_the_thing(spaceship_t * spaceship_p, int *dir) {
 		wind_resistance(&(*spaceship_p));
 		centisecond = 0;
 	}
-
-	//lav en konstant movement der er høj så længe der er forskel på temp_velocity og celocity. Når movement er lav så kører wind_resistance
-	//Sæt timeren til 0 ved input fra tastaturet idiot
-
-	gotoxy(14080, 1024);
-	printf("velocity: x = %d, y = %d ", (*spaceship_p).velX, (*spaceship_p).velY);
+	if (button()) {
+		gotoxy(14080, 1024);
+		printf("velocity: x = %d, y = %d ", (*spaceship_p).velX, (*spaceship_p).velY);
+	}
+	/*gotoxy(14080, 1024);
+	printf("velocity: x = %d, y = %d ", (*spaceship_p).velX, (*spaceship_p).velY);*/
 	dir = 0;
 }
 void update_spaceship(spaceship_t * spaceship_p, int dir) {
@@ -51,6 +52,7 @@ void update_spaceship(spaceship_t * spaceship_p, int dir) {
 
 	wrapping(&(*spaceship_p));
 
+	//printing new spaceship if it moves
 	if (tempX != (*spaceship_p).x || tempY != (*spaceship_p).y || tempR != (*spaceship_p).rotation) {draw_new_spaceship(&(*spaceship_p), tempX, tempY, tempR);}
 }
 
@@ -74,14 +76,6 @@ void wrapping(spaceship_t * spaceship_p) {
 }
 
 void wind_resistance(spaceship_t * spaceship_p) {
-	/*if ((*spaceship_p).velX <= -2) {(*spaceship_p).velX += 2;}
-	else if ((*spaceship_p).velX >= 2) {(*spaceship_p).velX -= 2;}
-	else if ((*spaceship_p).velX < 2 && (*spaceship_p).velX > -2) {(*spaceship_p).velX = 0;}
-
-	if ((*spaceship_p).velY <= -2) {(*spaceship_p).velY += 2;}
-	else if ((*spaceship_p).velY >= 2) {(*spaceship_p).velY -= 2;}
-	else if ((*spaceship_p).velY < 2 && (*spaceship_p).velY > -2) {(*spaceship_p).velY = 0;}*/
-
 	if ((*spaceship_p).velX >= 1) {(*spaceship_p).velX -= 1;}
 	else if ((*spaceship_p).velX <= - 1) {(*spaceship_p).velX += 1;}
 

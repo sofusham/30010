@@ -2,7 +2,7 @@
 #include "stdint.h"
 #include "stm32f30x_conf.h"
 #include "stm32f30x_conf.h"
-#include "ball.h"
+#include "spaceship.h"
 #include "draw.h"
 #include "ansi.h"
 #include "position.h"

@@ -3,7 +3,7 @@
 #include "ansi.h"
 #include "30010_io.h"
 #include "stdint.h"
-#include "ball.h"
+#include "spaceship.h"
 #include "draw.h"
 #include "lcd.h"
 #include "charset.h"
@@ -58,7 +58,7 @@ int32_t shipAsteroidCollision(spaceship_t * spaceship, asteroid_t * asteroid ){
 		int32_t astXMin = (*asteroid).x-128;
 		int32_t astYMax = (*asteroid).y+128;
 		int32_t astYMin = (*asteroid).y-128;
-		int32_t withinX = (((*spaceship).x <  astXMax) && ((*spaceship).x >  astXMin)) || (((*spaceship).x+16 <  astXMax) && ((*spaceship).x+16 >  astXMin));
+		int32_t withinX = (((*spaceship).x <  astXMax) && ((*spaceship).x >  astXMin)) || (((*spaceship).x+32 <  astXMax) && ((*spaceship).x+32 >  astXMin));
 		int32_t withinY = ((*spaceship).y <  astYMax) && ((*spaceship).y >  astYMin);
 
 	if(withinX && withinY && !((*asteroid).destroyed)){

@@ -4,7 +4,8 @@
 #include "timer.h"
 #include "lcd.h"
 #include "charset.h"
-#include "ball.h"
+#include "spaceship.h"
+#include "analogJoystick.h"
 #include "draw.h"
 #include "position.h"
 
@@ -32,6 +33,7 @@ int main(void)
 	configureTimer();
 	clrscr();
 	lcd_init();
+	initPins();
 	//window(1440, 640, 11520, 3840);
 	spaceship_t spaceship_p = {1984, 1024, 2, 0, 0};
 	gotoxy(spaceship_p.x, spaceship_p.y);
@@ -70,6 +72,7 @@ int main(void)
 		calculateNextAst(&asteroids);
 		updatePosAst(&asteroids);
 		drawAsteroid(&asteroids);
+
 
 		if(shipAsteroidCollision(&spaceship_p, &asteroids)){
 			gotoxy(1600,1600);
