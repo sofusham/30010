@@ -12,7 +12,7 @@ typedef struct {
 	int32_t x, y, rotation, velX, velY, nextPosX, nextPosY;
 } spaceship_t ;
 
-void update_spaceship(spaceship_t * spaceship_p, int dir);
+void update_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot);
 void draw_new_spaceship(spaceship_t * spaceship_p, int32_t tempX, int32_t tempY, int8_t tempR);
 void wind_resistance(spaceship_t * spaceship_p);
 void update_velocity(spaceship_t * spaceship_p);

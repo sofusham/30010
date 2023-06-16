@@ -21,12 +21,12 @@ void lcdInfo(uint32_t lives, char lifestring[], uint32_t score, char scorestring
 
 int main(void)
 {
-	int dir = 0;
 	uint32_t lives = 3;
+	int16_t prevRot = 0;
+	int16_t curRot;
 	char lifestring[8];
 	uint32_t score = 0;
 	char scorestring[8];
-	int count = 0;
 	asteroid_t asteroids;
 
 	uart_init(576000);
@@ -34,6 +34,7 @@ int main(void)
 	clrscr();
 	lcd_init();
 	initPins();
+	configureADC();
 	//window(1440, 640, 11520, 3840);
 	spaceship_t spaceship_p = {1984, 1024, 2, 0, 0};
 	gotoxy(spaceship_p.x, spaceship_p.y);
@@ -52,6 +53,7 @@ int main(void)
 	lcdInfo(lives, &lifestring, score, &scorestring);
 
 	while(1){
+		curRot = measurePA6();
 		/*if (uart_get_count() == 1) {
 			dir = string_check(read_uart_data(1));
 			centisecond = 0;
@@ -68,7 +70,7 @@ int main(void)
 		gotoxy(14080, 1024);
 		printf("velocity: x = %d, y = %d ", spaceship_p.velX, spaceship_p.velY);
 		*dir = 0;*/
-		do_the_thing(&spaceship_p, dir);
+		do_the_thing(&spaceship_p, prevRot, curRot);
 		calculateNextAst(&asteroids);
 		updatePosAst(&asteroids);
 		drawAsteroid(&asteroids);
@@ -84,5 +86,6 @@ int main(void)
 		//for(int i = 0; i <1500000; i++){}
 		clearAsteroid(&asteroids);
 
+		prevRot = curRot;
 	}
 }

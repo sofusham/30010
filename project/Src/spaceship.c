@@ -11,42 +11,40 @@
 #include "timer.h"
 #include "analogJoystick.h"
 
-void do_the_thing(spaceship_t * spaceship_p, int *dir) {
-	if (uart_get_count() == 1) {
+void do_the_thing(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
+	int16_t adc1, adc2;
+	/*if (uart_get_count() == 1) {
 		dir = string_check(read_uart_data(1));
 		centisecond = 0;
-	}
-	update_spaceship(&(*spaceship_p), dir);
+	}*/
+	update_spaceship(&(*spaceship_p), prevRot, curRot);
 	if (centisecond > 20) {
 		wind_resistance(&(*spaceship_p));
 		centisecond = 0;
 	}
-	if (button()) {
-		gotoxy(14080, 1024);
-		printf("velocity: x = %d, y = %d ", (*spaceship_p).velX, (*spaceship_p).velY);
-	}
-	/*gotoxy(14080, 1024);
-	printf("velocity: x = %d, y = %d ", (*spaceship_p).velX, (*spaceship_p).velY);*/
-	dir = 0;
+	gotoxy(14080, 1024);
+	adc1 = measurePA6();
+	adc2 = measurePA7();
+	printf("velocity: x = %04d, y = %d ", adc1, adc2);
 }
-void update_spaceship(spaceship_t * spaceship_p, int dir) {
+void update_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
 	int32_t tempX = (*spaceship_p).x;
 	int32_t tempY = (*spaceship_p).y;
 	int8_t tempR = (*spaceship_p).rotation;
 
-	switch(dir) {
-	case 1:
-		update_velocity(&(*spaceship_p));
-		break;
-	case 2:
-		(*spaceship_p).rotation--;
-		if ((*spaceship_p).rotation < 0) {(*spaceship_p).rotation = 7;}
-		break;
-	case 4:
-		(*spaceship_p).rotation++;
-		if ((*spaceship_p).rotation > 7) {(*spaceship_p).rotation = 0;}
-		break;
+	if (measurePA7()) {update_velocity(&(*spaceship_p));}
+	if (curRot != prevRot) {
+		if (curRot == 1) {
+			(*spaceship_p).rotation++;
+			if ((*spaceship_p).rotation > 7) {(*spaceship_p).rotation = 0;}
+		}
+		else if (curRot == 2) {
+			(*spaceship_p).rotation--;
+			if ((*spaceship_p).rotation < 0) {(*spaceship_p).rotation = 7;}
+		}
 	}
+
+
 	(*spaceship_p).x += (*spaceship_p).velX;
 	(*spaceship_p).y += (*spaceship_p).velY;
 
@@ -76,42 +74,44 @@ void wrapping(spaceship_t * spaceship_p) {
 }
 
 void wind_resistance(spaceship_t * spaceship_p) {
-	if ((*spaceship_p).velX >= 1) {(*spaceship_p).velX -= 1;}
-	else if ((*spaceship_p).velX <= - 1) {(*spaceship_p).velX += 1;}
+	if ((*spaceship_p).velX >= 6) {(*spaceship_p).velX -= 6;}
+	else if ((*spaceship_p).velX <= -6) {(*spaceship_p).velX += 6;}
+	else if ((*spaceship_p).velX < 6 && (*spaceship_p).velX > -6) {(*spaceship_p).velX = 0;}
 
-	if ((*spaceship_p).velY >= 1) {(*spaceship_p).velY -= 1;}
-	else if ((*spaceship_p).velY <= - 1) {(*spaceship_p).velY += 1;}
+	if ((*spaceship_p).velY >= 6) {(*spaceship_p).velY -= 6;}
+	else if ((*spaceship_p).velY <= -6) {(*spaceship_p).velY += 6;}
+	else if ((*spaceship_p).velY < 6 && (*spaceship_p).velY > -6) {(*spaceship_p).velY = 0;}
 }
 
 void update_velocity(spaceship_t * spaceship_p) {
 	switch((*spaceship_p).rotation) {
 	case 0:
-		(*spaceship_p).velY -= 4;
+		(*spaceship_p).velY -= 1;
 		break;
 	case 1:
-		(*spaceship_p).velX += 4;
-		(*spaceship_p).velY -= 4;
+		(*spaceship_p).velX += 1;
+		(*spaceship_p).velY -= 1;
 		break;
 	case 2:
-		(*spaceship_p).velX += 4;
+		(*spaceship_p).velX += 1;
 		break;
 	case 3:
-		(*spaceship_p).velX += 4;
-		(*spaceship_p).velY += 4;
+		(*spaceship_p).velX += 1;
+		(*spaceship_p).velY += 1;
 		break;
 	case 4:
-		(*spaceship_p).velY += 4;
+		(*spaceship_p).velY += 1;
 		break;
 	case 5:
-		(*spaceship_p).velX -= 4;
-		(*spaceship_p).velY += 4;
+		(*spaceship_p).velX -= 1;
+		(*spaceship_p).velY += 1;
 		break;
 	case 6:
-		(*spaceship_p).velX -= 4;
+		(*spaceship_p).velX -= 1;
 		break;
 	case 7:
-		(*spaceship_p).velX -= 4;
-		(*spaceship_p).velY -= 4;
+		(*spaceship_p).velX -= 1;
+		(*spaceship_p).velY -= 1;
 		break;
 	}
 }
