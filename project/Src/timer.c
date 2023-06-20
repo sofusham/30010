@@ -8,9 +8,9 @@
 #include "lcd.h"
 
 volatile int centisecond = 0;
+
 void TIM1_BRK_TIM15_IRQHandler(void) {
 	centisecond++;
-	flag++;
 	TIM15 -> SR &= ~0x0001;
 }
 

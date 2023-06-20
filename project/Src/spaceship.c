@@ -12,7 +12,6 @@
 #include "analogJoystick.h"
 
 void do_the_thing(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
-	int16_t adc1, adc2;
 	/*if (uart_get_count() == 1) {
 		dir = string_check(read_uart_data(1));
 		centisecond = 0;
@@ -22,10 +21,6 @@ void do_the_thing(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) 
 		wind_resistance(&(*spaceship_p));
 		centisecond = 0;
 	}
-	gotoxy(14080, 1024);
-	adc1 = measurePA6();
-	adc2 = measurePA7();
-	printf("velocity: x = %04d, y = %d ", adc1, adc2);
 }
 void update_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
 	int32_t tempX = (*spaceship_p).x;
@@ -74,46 +69,50 @@ void wrapping(spaceship_t * spaceship_p) {
 }
 
 void wind_resistance(spaceship_t * spaceship_p) {
-	if ((*spaceship_p).velX >= 6) {(*spaceship_p).velX -= 6;}
-	else if ((*spaceship_p).velX <= -6) {(*spaceship_p).velX += 6;}
-	else if ((*spaceship_p).velX < 6 && (*spaceship_p).velX > -6) {(*spaceship_p).velX = 0;}
+	if ((*spaceship_p).velX >= 8) {(*spaceship_p).velX -= 8;}
+	else if ((*spaceship_p).velX <= -8) {(*spaceship_p).velX += 8;}
+	else if ((*spaceship_p).velX < 8 && (*spaceship_p).velX > -8) {(*spaceship_p).velX = 0;}
 
-	if ((*spaceship_p).velY >= 6) {(*spaceship_p).velY -= 6;}
-	else if ((*spaceship_p).velY <= -6) {(*spaceship_p).velY += 6;}
-	else if ((*spaceship_p).velY < 6 && (*spaceship_p).velY > -6) {(*spaceship_p).velY = 0;}
+	if ((*spaceship_p).velY >= 8) {(*spaceship_p).velY -= 8;}
+	else if ((*spaceship_p).velY <= -8) {(*spaceship_p).velY += 8;}
+	else if ((*spaceship_p).velY < 8 && (*spaceship_p).velY > -8) {(*spaceship_p).velY = 0;}
 }
 
 void update_velocity(spaceship_t * spaceship_p) {
 	switch((*spaceship_p).rotation) {
 	case 0:
-		(*spaceship_p).velY -= 1;
+		(*spaceship_p).velY -= 8;
 		break;
 	case 1:
-		(*spaceship_p).velX += 1;
-		(*spaceship_p).velY -= 1;
+		(*spaceship_p).velX += 8;
+		(*spaceship_p).velY -= 8;
 		break;
 	case 2:
-		(*spaceship_p).velX += 1;
+		(*spaceship_p).velX += 8;
 		break;
 	case 3:
-		(*spaceship_p).velX += 1;
-		(*spaceship_p).velY += 1;
+		(*spaceship_p).velX += 8;
+		(*spaceship_p).velY += 8;
 		break;
 	case 4:
-		(*spaceship_p).velY += 1;
+		(*spaceship_p).velY += 8;
 		break;
 	case 5:
-		(*spaceship_p).velX -= 1;
-		(*spaceship_p).velY += 1;
+		(*spaceship_p).velX -= 8;
+		(*spaceship_p).velY += 8;
 		break;
 	case 6:
-		(*spaceship_p).velX -= 1;
+		(*spaceship_p).velX -= 8;
 		break;
 	case 7:
-		(*spaceship_p).velX -= 1;
-		(*spaceship_p).velY -= 1;
+		(*spaceship_p).velX -= 8;
+		(*spaceship_p).velY -= 8;
 		break;
 	}
+	if ((*spaceship_p).velX > 75) {(*spaceship_p).velX = 75; }
+	else if ((*spaceship_p).velX < -75) {(*spaceship_p).velX = -75; }
+	if ((*spaceship_p).velY > 75) {(*spaceship_p).velY = 75; }
+	else if ((*spaceship_p).velY < -75) {(*spaceship_p).velY = -75;}
 }
 
 void draw_new_spaceship(spaceship_t * spaceship_p, int32_t tempX, int32_t tempY, int8_t tempR) {

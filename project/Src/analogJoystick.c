@@ -40,7 +40,7 @@ int16_t measurePA6() {
 
 	uint16_t x = ADC_GetConversionValue(ADC1);
 	if (x > 3600) {return 1;}
-	else if (x < 1900) {return 2;}
+	else if (x < 1500) {return 2;}
 	else {return 0;}
 }
 
@@ -62,7 +62,13 @@ int16_t measurePA7() {
 	while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == 0); // Wait for ADC read
 
 	uint16_t x = ADC_GetConversionValue(ADC1);
-	if (x > 3800) {return 1;}
+	if (x > 3600) {return 1;}
+	else {return 0;}
+}
+
+int16_t getPF1() {
+	int16_t x = GPIOF -> IDR & (0x0001 << 1);
+	if (x > 0) {return 1;}
 	else {return 0;}
 }
 
@@ -71,6 +77,7 @@ void setPinA6() {
 	GPIOA -> MODER |= (0x0000000 << (6 * 2));
 	GPIOA -> PUPDR &= ~(0x00000003 << (6 * 2));
 	GPIOA -> PUPDR |= (0x00000002 << (6 * 2));
+
 }
 
 void setPinA7() {
@@ -78,6 +85,7 @@ void setPinA7() {
 	GPIOA -> MODER |= (0x0000000 << (7 * 2));
 	GPIOA -> PUPDR &= ~(0x00000003 << (7 * 2));
 	GPIOA -> PUPDR |= (0x00000002 << (7 * 2));
+
 }
 
 void setPinF1() {

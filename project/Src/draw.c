@@ -9,6 +9,7 @@
 #include "lcd.h"
 #include "charset.h"
 #include "timer.h"
+#include "bullet.h"
 
 
 
@@ -305,8 +306,64 @@ void clearSpaceship(spaceship_t * spaceship){
 	}
 }
 void drawBullet(bullet_t * bullet){
-	gotoxy((*bullet).x,(*bullet).y);
+	gotoxy((*bullet).positionX,(*bullet).positionY);
 	printf("*");
 }
+void drawAlien(alien_t * alien){
+	if((*alien).active){
+		gotoxy((*alien).x, (*alien).y);
+		printf("O");
+		/*gotoxy((*alien).x+128, (*alien).y);
+		printf("°");
+		gotoxy((*alien).x-128, (*alien).y);
+		printf("°");*/
+		gotoxy((*alien).x+128, (*alien).y);
+		printf(">");
+		gotoxy((*alien).x-128, (*alien).y);
+		printf("<");
+		gotoxy((*alien).x+128, (*alien).y-128);
+		printf("\xBB");
+		gotoxy((*alien).x, (*alien).y-128);
+		printf("\xCD");
+		gotoxy((*alien).x-128, (*alien).y-128);
+		printf("\xC9");
+		gotoxy((*alien).x+128, (*alien).y+128);
+		printf("\xBC");
+		gotoxy((*alien).x, (*alien).y+128);
+		printf("\xCD");
+		gotoxy((*alien).x-128, (*alien).y+128);
+		printf("\xC8");
+	}
+}
+void clearAlien(alien_t * alien){
 
+		gotoxy((*alien).x, (*alien).y);
+		printf(" ");
+		/*gotoxy((*alien).x+128, (*alien).y);
+		printf("°");
+		gotoxy((*alien).x-128, (*alien).y);
+		printf("°");*/
+		gotoxy((*alien).x+128, (*alien).y);
+		printf(" ");
+		gotoxy((*alien).x-128, (*alien).y);
+		printf(" ");
+		gotoxy((*alien).x+128, (*alien).y-128);
+		printf(" ");
+		gotoxy((*alien).x, (*alien).y-128);
+		printf(" ");
+		gotoxy((*alien).x-128, (*alien).y-128);
+		printf(" ");
+		gotoxy((*alien).x+128, (*alien).y+128);
+		printf(" ");
+		gotoxy((*alien).x, (*alien).y+128);
+		printf(" ");
+		gotoxy((*alien).x-128, (*alien).y+128);
+		printf(" ");
+}
+void drawPowerup(powerup_t * powerup){
+	if((*powerup).active){
+		gotoxy((*powerup).x, (*powerup).y);
+		printf("!");
+	}
+}
 
