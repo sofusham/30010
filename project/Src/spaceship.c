@@ -46,7 +46,8 @@ void update_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curR
 	wrapping(&(*spaceship_p));
 
 	//printing new spaceship if it moves
-	if (tempX != (*spaceship_p).x || tempY != (*spaceship_p).y || tempR != (*spaceship_p).rotation) {draw_new_spaceship(&(*spaceship_p), tempX, tempY, tempR);}
+	if (tempX != (*spaceship_p).x || tempY != (*spaceship_p).y || tempR != (*spaceship_p).rotation) {}
+	draw_new_spaceship(&(*spaceship_p), tempX, tempY, tempR);
 }
 
 void wrapping(spaceship_t * spaceship_p) {
@@ -109,8 +110,8 @@ void update_velocity(spaceship_t * spaceship_p) {
 		(*spaceship_p).velY -= 8;
 		break;
 	}
-	if ((*spaceship_p).velX > 75) {(*spaceship_p).velX = 75; }
-	else if ((*spaceship_p).velX < -75) {(*spaceship_p).velX = -75; }
+	if ((*spaceship_p).velX > 90) {(*spaceship_p).velX = 90; }
+	else if ((*spaceship_p).velX < -90) {(*spaceship_p).velX = -90; }
 	if ((*spaceship_p).velY > 75) {(*spaceship_p).velY = 75; }
 	else if ((*spaceship_p).velY < -75) {(*spaceship_p).velY = -75;}
 }

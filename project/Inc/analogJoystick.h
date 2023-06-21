@@ -11,11 +11,13 @@
 void setPinPA6();
 void setPinPA7();
 void setPinF1();
+void setPinB5();
 void initPins();
 void configureADC();
 int16_t measurePA6();
 int16_t measurePA7();
 int16_t getPF1();
+int16_t getPB5();
 
 
 #endif /* ANALOGJOYSTICK_H_ */

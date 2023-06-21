@@ -72,6 +72,12 @@ int16_t getPF1() {
 	else {return 0;}
 }
 
+int16_t getPB5() {
+	uint16_t center = GPIOB -> IDR & (0x0001 << 5);
+	if (center) {return 1; }
+	else {return 0; }
+}
+
 void setPinA6() {
 	GPIOA -> MODER &= ~(0x00000001 << (6 * 2));
 	GPIOA -> MODER |= (0x0000000 << (6 * 2));
@@ -95,11 +101,20 @@ void setPinF1() {
 	GPIOF -> PUPDR |= (0x00000002 << (1 * 2));
 }
 
+void setPinB5() {
+	GPIOB -> MODER &= ~(0x00000003 << (5 * 2));
+	GPIOB -> MODER |= (0x00000000 << (5 * 2));
+	GPIOB -> PUPDR &= ~(0x00000003 << (5 * 2));
+	GPIOB -> PUPDR |= (0x00000002 << (5 * 2));
+}
+
 void initPins() {
 	RCC -> AHBENR |= RCC_AHBPeriph_GPIOA;
+	RCC -> AHBENR |= RCC_AHBPeriph_GPIOB;
 	RCC -> AHBENR |= RCC_AHBPeriph_GPIOF;
 	setPinA6();
 	setPinA7();
 	setPinF1();
+	setPinB5();
 }
 

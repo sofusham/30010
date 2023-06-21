@@ -104,15 +104,19 @@ void moveBullet(bullet_t * bullet) {
 		(*bullet).nextPosX = (*bullet).positionX + (*bullet).vectorX;
 		if((*bullet).nextPosX > (128*190)) {
 			(*bullet).nextPosX = 0;
+			clrscr();
 		} else if((*bullet).nextPosX < 0) {
 			(*bullet).nextPosX = 128*190;
+			clrscr();
 		}
 
 		(*bullet).nextPosY = (*bullet).positionY + (*bullet).vectorY;
 		if((*bullet).nextPosY > (128*55)) {
 			(*bullet).nextPosY = 0;
+			clrscr();
 		} else if((*bullet).nextPosY < 0) {
 			(*bullet).nextPosY = 128*55;
+			clrscr();
 		}
 		gotoxy((*bullet).positionX, (*bullet).positionY);
 		printf(" ");

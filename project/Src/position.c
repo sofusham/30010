@@ -17,13 +17,17 @@ void calculateNextAst( asteroid_t * asteroid){
 	(*asteroid).nextPosY = (*asteroid).y + (*asteroid).velY;
 	if((*asteroid).nextPosX > 128*190){ //Wrapping for x-coordinates
 		(*asteroid).nextPosX = 0;
+		clrscr();
 	} else if((*asteroid).nextPosX < 0) {
 		(*asteroid).nextPosX = 128*190;
+		clrscr();
 	}
 	if((*asteroid).nextPosY > 128*55){ //Wrapping for y-coordinates
 		(*asteroid).nextPosY = 0;
+		clrscr();
 	} else if((*asteroid).nextPosY < 0) {
 		(*asteroid).nextPosY = 128*55;
+		clrscr();
 	}
 }
 
@@ -114,9 +118,9 @@ int8_t asteroidBulletCollision(asteroid_t * asteroid, bullet_t * bullet, spacesh
 void moveAlien(alien_t * alien, spaceship_t * spaceship){
 	if((*alien).active){
 		if(((*alien).x) < ((*spaceship).x)){
-			(*alien).x = (*alien).x+48;
+			(*alien).x = (*alien).x+64;
 		} else if(((*alien).x) > ((*spaceship).x)){
-			(*alien).x = (*alien).x-48;
+			(*alien).x = (*alien).x-64;
 		}
 
 		if((*alien).x > 128*190) {
@@ -126,9 +130,9 @@ void moveAlien(alien_t * alien, spaceship_t * spaceship){
 		}
 
 		if((*alien).y < (*spaceship).y){
-			(*alien).y = (*alien).y+48;
+			(*alien).y = (*alien).y+64;
 		} else if((*alien).y > (*spaceship).y){
-			(*alien).y = (*alien).y-48;
+			(*alien).y = (*alien).y-64;
 		}
 
 		if((*alien).y > 128*190) {
@@ -174,18 +178,22 @@ int8_t bulletAlienCollision(bullet_t * bullet, alien_t * alien, spaceship_t * sp
 		}
 	}
 }
+
 void pickupPowerup(spaceship_t * spaceship, powerup_t * powerup, uint32_t lives){
-
-	if((*spaceship).x < (*powerup).x+256 && (*spaceship).x > (*powerup).x-256 && (*spaceship).y < (*powerup).y+256 && (*spaceship).y > (*powerup).y-256){
-		if((*powerup).type == 1){
-			(*spaceship).stoppingPower = 1;
-
-		} else if((*powerup).type == 2){
-			(*spaceship).infiniteRange = 1;
-		} else {
-			lives++;
+	if((*powerup).active){
+		if((*spaceship).x < (*powerup).x+256 && (*spaceship).x > (*powerup).x-256 && (*spaceship).y < (*powerup).y+256 && (*spaceship).y > (*powerup).y-256){
+			if((*powerup).type == 1 && !((*spaceship).stoppingPower)){
+				(*spaceship).stoppingPower = 1;
+				(*powerup).type++;
+				(*powerup).active = 0;
+			} else if((*powerup).type == 2 && !((*spaceship).infiniteRange)){
+				(*spaceship).infiniteRange = 1;
+				(*powerup).type++;
+				(*powerup).active = 0;
+			} else {
+				(*powerup).active = 0;
+				lives++;
+			}
 		}
-		(*powerup).type++;
-		(*powerup).active = 0;
 	}
 }
