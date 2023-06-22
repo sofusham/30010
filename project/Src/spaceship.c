@@ -11,7 +11,7 @@
 #include "timer.h"
 #include "analogJoystick.h"
 
-void do_the_thing(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
+void all_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
 	/*if (uart_get_count() == 1) {
 		dir = string_check(read_uart_data(1));
 		centisecond = 0;

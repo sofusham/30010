@@ -39,14 +39,15 @@ void window(int x2, int y2, int x1, int y1) {
 }
 
 void start_menu() {
-	stop_buzzer();
 	int i = 0;
 	int8_t prevRot = 0;
 	int8_t curRot;
 	int8_t prevShot = 0;
 	int8_t curShot;
 
+	stop_buzzer();
 	clrscr();
+
 	window(9620, 1400, 14620, 3500);
 	gotoxy(11720, 1640);
 	printf("THE GAME!");

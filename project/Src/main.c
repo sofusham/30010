@@ -139,7 +139,7 @@ int main(void)
 				curRot = measurePA6();
 				curShot = getPF1();
 
-				do_the_thing(&spaceship_p, prevRot, curRot);
+				all_spaceship(&spaceship_p, prevRot, curRot);
 				for (int l = 0; l < 8; l++) {
 					clearAsteroid(&asteroids[l]);
 					calculateNextAst(&asteroids[l]);
