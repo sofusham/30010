@@ -313,10 +313,6 @@ void drawAlien(alien_t * alien){
 	if((*alien).active){
 		gotoxy((*alien).x, (*alien).y);
 		printf("O");
-		/*gotoxy((*alien).x+128, (*alien).y);
-		printf("°");
-		gotoxy((*alien).x-128, (*alien).y);
-		printf("°");*/
 		gotoxy((*alien).x+128, (*alien).y);
 		printf(">");
 		gotoxy((*alien).x-128, (*alien).y);
@@ -339,10 +335,6 @@ void clearAlien(alien_t * alien){
 
 		gotoxy((*alien).x, (*alien).y);
 		printf(" ");
-		/*gotoxy((*alien).x+128, (*alien).y);
-		printf("°");
-		gotoxy((*alien).x-128, (*alien).y);
-		printf("°");*/
 		gotoxy((*alien).x+128, (*alien).y);
 		printf(" ");
 		gotoxy((*alien).x-128, (*alien).y);

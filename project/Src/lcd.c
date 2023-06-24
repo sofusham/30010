@@ -16,11 +16,6 @@ void lcd_write_string(char * slice, uint8_t line) {
 			buffer[j + ((line - 1)*128) + (5*i)] = character_data[slice[i] - 32][j];
 		}
 	}
-	/*if (centisecond == 100) {
-		flag++;
-		TIM15 -> DIER |= 0x0001;
-		centisecond = 0;
-	}*/
 }
 
 void lcd_update(int s) {

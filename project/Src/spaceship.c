@@ -12,10 +12,7 @@
 #include "analogJoystick.h"
 
 void all_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
-	/*if (uart_get_count() == 1) {
-		dir = string_check(read_uart_data(1));
-		centisecond = 0;
-	}*/
+	//Does everything to move the spacehsip
 	update_spaceship(&(*spaceship_p), prevRot, curRot);
 	if (centisecond > 20) {
 		wind_resistance(&(*spaceship_p));
@@ -23,10 +20,12 @@ void all_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot)
 	}
 }
 void update_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curRot) {
+	//Creates temporary variables to remove old spaceship
 	int32_t tempX = (*spaceship_p).x;
 	int32_t tempY = (*spaceship_p).y;
 	int8_t tempR = (*spaceship_p).rotation;
 
+	//Updates velocity and orientation
 	if (measurePA7()) {update_velocity(&(*spaceship_p));}
 	if (curRot != prevRot) {
 		if (curRot == 1) {
@@ -39,18 +38,17 @@ void update_spaceship(spaceship_t * spaceship_p, int16_t *prevRot, int16_t *curR
 		}
 	}
 
-
+	//Updates position
 	(*spaceship_p).x += (*spaceship_p).velX;
 	(*spaceship_p).y += (*spaceship_p).velY;
 
 	wrapping(&(*spaceship_p));
 
-	//printing new spaceship if it moves
-	if (tempX != (*spaceship_p).x || tempY != (*spaceship_p).y || tempR != (*spaceship_p).rotation) {}
 	draw_new_spaceship(&(*spaceship_p), tempX, tempY, tempR);
 }
 
 void wrapping(spaceship_t * spaceship_p) {
+	//Wraps spaceship from one side to another
 	if ((*spaceship_p).x > 128 * 190) {
 		(*spaceship_p).x = 0;
 		clrscr();
@@ -110,6 +108,8 @@ void update_velocity(spaceship_t * spaceship_p) {
 		(*spaceship_p).velY -= 8;
 		break;
 	}
+
+	//Speed limit
 	if ((*spaceship_p).velX > 90) {(*spaceship_p).velX = 90; }
 	else if ((*spaceship_p).velX < -90) {(*spaceship_p).velX = -90; }
 	if ((*spaceship_p).velY > 75) {(*spaceship_p).velY = 75; }

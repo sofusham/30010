@@ -49,6 +49,7 @@ uint8_t* read_uart_data(uint8_t num_chars) {
 }
 
 uint8_t string_check(char * data) {
+	//Checks if input is "Enter"
 	if( !(strcmp(data, "\0x0D"))) {return 1;}
 	else {return 0;}
 }

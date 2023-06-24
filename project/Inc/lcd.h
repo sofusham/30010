@@ -13,5 +13,6 @@ extern volatile int flag;
 
 void lcd_write_string(char * slice, uint8_t line);
 void lcd_update();
+void shift_buffer(int line);
 
 #endif /* LCD_H_ */

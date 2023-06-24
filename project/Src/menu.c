@@ -48,6 +48,7 @@ void start_menu() {
 	stop_buzzer();
 	clrscr();
 
+	//printing layout
 	window(9620, 1400, 14620, 3500);
 	gotoxy(11720, 1640);
 	printf("THE GAME!");
@@ -58,12 +59,13 @@ void start_menu() {
 	gotoxy(11580, 1800);
 	printf("<");
 
-	for (int i = 0; i < 1000000; i++) {}
+	for (int j = 0; j < 1000000; j++) {}
 	while(1) {
 		stop_buzzer();
 		curRot = measurePA6();
 		curShot = getPF1();
 
+		//input from joystik
 		if (curRot != prevRot) {
 			switch (curRot) {
 			case 1:
@@ -106,6 +108,8 @@ void controls_menu() {
 	int8_t prevShot = 0;
 	int8_t curShot;
 	clrscr();
+
+	//printing layout
 	window(9620, 1400, 14620, 3500);
 	gotoxy(11720, 1640);
 	printf("THE GAME!");
@@ -124,12 +128,16 @@ void controls_menu() {
 	printf("Exit controls menu  <");
 
 	for (int i = 0; i < 1000000; i++) {}
+
+	//takes input and brakes back into while loop in start_menu
 	while(1) {
 		curShot = getPF1();
 		if (curShot > prevShot) {break; }
 
 		prevShot = curShot;
 	}
+
+	//prints layout to start_menu here since this is not needed every iteration
 	clrscr();
 	window(9620, 1400, 14620, 3500);
 	gotoxy(11720, 1640);
@@ -143,7 +151,6 @@ void controls_menu() {
 }
 
 void death_menu() {
-	int i = 0;
 	int8_t prevShot = 0;
 	int8_t curShot;
 
@@ -155,6 +162,8 @@ void death_menu() {
 	printf("Return to main menu  <");
 
 	for (int i = 0; i < 1000000; i++) {}
+
+	//Joystick input
 	while(1) {
 		stop_buzzer();
 		curShot = getPF1();
@@ -188,6 +197,8 @@ void boss_menu() {
 	memset(buffer, 0x00, 512);
 	lcd_push_buffer(buffer);
 	print_spreadsheet();
+
+	//Breaks if input is "Enter"
 	while(1) {
 		if (uart_get_count() == 1) {
 			if (string_check(read_uart_data(1)) == 1) {

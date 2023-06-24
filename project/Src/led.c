@@ -33,21 +33,6 @@ void setLED(uint32_t lives) {
 		GPIOC -> ODR |= (0x0001 << 7);
 		GPIOB -> ODR |= ~(0x0001 << 4);
 	}
-	/*else if (readJoystick() == 0x07) {
-		GPIOC -> ODR = (0x0001 << 7);
-		GPIOA -> ODR = ~(0x0001 << 9);
-		GPIOB -> ODR = ~(0x0001 << 4);
-	}
-	else if (readJoystick() == 0x10) {
-		GPIOA -> ODR = (0x0001 << 9);
-		GPIOC -> ODR = ~(0x0001 << 7);
-		GPIOB -> ODR = ~(0x0001 << 4);
-	}
-	else {
-		GPIOA -> ODR = ~(0x0001 << 9);
-		GPIOC -> ODR = ~(0x0001 << 7);
-		GPIOB -> ODR = ~(0x0001 << 4);
-	}*/
 }
 
 void setPinPA9() {

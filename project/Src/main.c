@@ -13,7 +13,7 @@
 #include "timer2.h"
 #include "time.h"
 #include "menu.h"
-#include "lcd.h"
+#include "led.h"
 
 void lcdInfo(uint32_t lives, char lifestring[], uint32_t score, char scorestring[], uint32_t highscore, char highscorestring[]){
 	memset(buffer, 0x00, 512);
@@ -26,25 +26,6 @@ void lcdInfo(uint32_t lives, char lifestring[], uint32_t score, char scorestring
 	lcd_write_string(highscorestring, 4);
 	lcd_push_buffer(buffer);
 }
-
-/*int16_t is_done(asteroid_t * asteroid[], alien_t * alien) {
-	int i, amogus, imposter;
-	int m = 8;
-	int n = 1;
-	for (i = 0; i < m; i++) {
-		if ((*asteroid[i]).destroyed) { amogus++; }
-	}
-	if (!(*alien).active) { imposter++; }
-
-	return (amogus == n && imposter == m);
-}*/
-
-/*void level_prog() {
- 	 amount of asteroids double or something something
- 	 velocity rises by something something
-
-
-} */
 
 int main(void)
 {
@@ -63,7 +44,6 @@ int main(void)
 	initPins();
 	configureADC();
 	configure_timer2();
-	//window(1440, 640, 11520, 3840);
 
 	spaceship_t spaceship_p = {1984, 1024, 2, 0, 0};
 
@@ -74,7 +54,10 @@ int main(void)
 	powerup.type = 1;
 
 	while(1) {
+		//Loop for coming back to start menu when dead
 		start_menu();
+
+		//Spaceship in startposition
 		spaceship_p.x = 12169;
 		spaceship_p.y = 3520;
 		spaceship_p.rotation = 2;
@@ -89,11 +72,14 @@ int main(void)
 
 
 		while(1) {
-			clrscr();
+			//Loop initializing game first time and when alien and asteroids are gone
+
+			//For joystick edge detection
 			int16_t prevRot = 0;
 			int16_t curRot;
 			int16_t prevShot = 0;
 			int16_t curShot;
+			clrscr();
 
 			asteroids_gone = 0;
 			alien_gone = 0;
@@ -135,6 +121,8 @@ int main(void)
 			lcdInfo(lives, &lifestring, score, &scorestring, highscore, &highscorestring);
 
 			while(1) {
+				//Loop moving objects and taking input
+
 				stop_buzzer();
 				curRot = measurePA6();
 				curShot = getPF1();
@@ -215,6 +203,7 @@ int main(void)
 				prevRot = curRot;
 				prevShot = curShot;
 
+				//boss key
 				if (uart_get_count() == 1) {
 					if (string_check(read_uart_data(1)) == 1) {
 						boss_menu();
@@ -235,8 +224,11 @@ int main(void)
 
 				drawPowerup(&powerup);
 				setLED(lives);
+
+				//Breaks to loop generating new asteroids and alien
 				if (asteroids_gone == 8 && alien_gone) { break; }
 			}
+			// break to loop with the start menu if condition false
 			if (asteroids_gone == 8 && alien_gone) {}
 			else {
 				death_menu();

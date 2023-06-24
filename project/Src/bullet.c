@@ -132,35 +132,3 @@ void moveBullet(bullet_t * bullet) {
 		}
 	 }
 }
-
-/*void BulletDecay(bullet b[]) {
-		int32_t i;
-		for (i=0 ; i<8; i++){
-			if (!(b[i].active == 0)) {
-				int32_t positionX = b[i].positionX>>8;
-				int32_t positionY = b[i].positionY>>8;
-				b[i].positionX = b[i].positionX + b[i].vectorX;
-				b[i].positionY = b[i].positionY + b[i].vectorY;
-				int32_t nextPosX = b[i].positionX>>8;
-				int32_t nextPosY = b[i].positionY>>8;
-				if (nextPosY<grænse && nextPosY>grænse && nextPosX>grænse && nextPosX<grænse) {
-					gotoxy(x,y);
-					fgcolor(0);
-					printf("\x2A");
-					gotoxy(nextPosX, nextPosY);
-					fgcolor(15);
-					printf("\x2A");
-				}else {
-					gotoxy(x,y);
-					fgcolor(0);
-					printf("\x2A");
-					a[i].active = 0;
-					a[i].positionX = 0;
-					a[i].positionY = 0;
-					a[i].vectorX = 0;
-					a[i].vectorY = 0;
-				}
-			}
-		}
-	}
-*/
